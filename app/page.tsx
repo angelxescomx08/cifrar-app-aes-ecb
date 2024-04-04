@@ -3,6 +3,7 @@
 import { ChangeEvent, useState } from "react";
 import { Cifrador } from "./components/cifrador";
 import { Descifrador } from "./components/descifrador";
+import { Select } from "./components/select";
 
 const options = {
   CIFRAR: "cifrar",
@@ -19,11 +20,9 @@ export default function Home() {
   };
 
   return (
-    <main className="container flex justify-center items-center h-dvh flex-col gap-4">
-      <select defaultValue={options.CIFRAR} onChange={handleSelectChange}>
-        <option value="cifrar">Cifrar</option>
-        <option value="descifrar">Descifrar</option>
-      </select>
+    <main className="flex justify-center items-center h-dvh flex-col gap-4">
+      <h1 className="text-2xl font-bold">AES ECB 128 bits</h1>
+      <Select options={Object.values(options)} onChange={handleSelectChange} />
       {cifrar === options.CIFRAR && <Cifrador />}
       {cifrar === options.DESCIFRAR && <Descifrador />}
     </main>
