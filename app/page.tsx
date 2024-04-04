@@ -20,8 +20,8 @@ export default function Home() {
   };
 
   return (
-    <main className="flex justify-center items-center h-dvh flex-col gap-4">
-      <div className="w-96 max-w-full bg-[#F5ECFF] p-5 rounded-xl">
+    <main className="flex justify-center items-center h-dvh flex-col gap-4 bg-[#B0CCD0] p-5">
+      <div className="w-96 max-w-full bg-[#FEFEDF] p-5 rounded-xl">
         <h1 className="text-2xl font-bold text-center mb-5">
           AES ECB 128 bits
         </h1>
