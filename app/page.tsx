@@ -21,10 +21,19 @@ export default function Home() {
 
   return (
     <main className="flex justify-center items-center h-dvh flex-col gap-4">
-      <h1 className="text-2xl font-bold">AES ECB 128 bits</h1>
-      <Select options={Object.values(options)} onChange={handleSelectChange} />
-      {cifrar === options.CIFRAR && <Cifrador />}
-      {cifrar === options.DESCIFRAR && <Descifrador />}
+      <div className="w-96 max-w-full bg-[#F5ECFF] p-5 rounded-xl">
+        <h1 className="text-2xl font-bold text-center mb-5">
+          AES ECB 128 bits
+        </h1>
+        <Select
+          name="options"
+          label="¿Qué deseas hacer?"
+          options={Object.values(options)}
+          onChange={handleSelectChange}
+        />
+        {cifrar === options.CIFRAR && <Cifrador />}
+        {cifrar === options.DESCIFRAR && <Descifrador />}
+      </div>
     </main>
   );
 }

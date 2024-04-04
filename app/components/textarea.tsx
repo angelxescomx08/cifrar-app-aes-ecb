@@ -8,7 +8,7 @@ type TextAreaProps = {
 
 export const Textarea = ({ label, name, placeholder = "" }: TextAreaProps) => {
   return (
-    <div className="mb-5">
+    <div className="mb-5 w-full">
       <label
         htmlFor={name}
         className="mb-3 block text-base font-medium text-[#07074D]"

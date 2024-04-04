@@ -5,7 +5,7 @@ import { Button } from "./button";
 
 export const Cifrador = () => {
   return (
-    <form className="flex flex-col justify-center items-center">
+    <form className="flex flex-col justify-center items-center w-full">
       <Input label="Llave" name="llave" placeholder="01234567891011" />
       <Textarea
         label="Texto plano"
