@@ -36,8 +36,6 @@ export const Descifrador = () => {
   };
 
   const onValid = (data: schemaType) => {
-    console.log(data);
-
     const bytes = CryptoJS.AES.decrypt(
       data["cipher-text"].trim(),
       data.llave.trim()
@@ -48,9 +46,7 @@ export const Descifrador = () => {
     handleOpenDialog();
   };
 
-  const onInvalid = (data: FieldErrors<schemaType>) => {
-    console.log(data);
-  };
+  const onInvalid = (data: FieldErrors<schemaType>) => {};
 
   return (
     <div>

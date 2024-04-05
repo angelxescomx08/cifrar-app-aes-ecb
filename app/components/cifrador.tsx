@@ -36,7 +36,6 @@ export const Cifrador = () => {
   };
 
   const onValid = (data: schemaType) => {
-    console.log(data);
     const encrypted = CryptoJS.AES.encrypt(
       data["plain-text"].trim(),
       data.llave.trim()
@@ -45,9 +44,7 @@ export const Cifrador = () => {
     handleOpenDialog();
   };
 
-  const onInvalid = (data: FieldErrors<schemaType>) => {
-    console.log(data);
-  };
+  const onInvalid = (data: FieldErrors<schemaType>) => {};
 
   return (
     <div>
