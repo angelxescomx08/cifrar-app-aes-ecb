@@ -6,13 +6,6 @@ import { useForm } from "@mantine/form";
 import { readFileContent } from "../utils/read-file";
 import { downloadFile } from "../utils/create-file";
 
-/* const schema = zod.object({
-  llave: zod.string().length(16),
-  "plain-text": zod.string(),
-});
-
-type schemaType = zod.infer<typeof schema>; */
-
 export const Cifrador = () => {
   const form = useForm({
     mode: "uncontrolled",
@@ -53,74 +46,80 @@ export const Cifrador = () => {
   };
 
   return (
-    <div>
-      <form
-        onSubmit={form.onSubmit(onSubmit)}
-        className="flex flex-col justify-center items-center w-full gap-4"
+    <form
+      onSubmit={form.onSubmit(onSubmit)}
+      className="flex flex-col justify-center items-center gap-4 bg-slate-100 p-4 w-96 m-4 shadow-xl border-slate-300 border rounded-md"
+    >
+      <Text
+        size="xl"
+        fw={900}
+        variant="gradient"
+        gradient={{ from: "blue", to: "cyan", deg: 90 }}
       >
-        <PasswordInput
-          mt="md"
-          label="Llave"
-          placeholder="Ingrese llave"
-          error="Invalid name"
-          className="w-full"
-          {...form.getInputProps("llave")}
-        />
+        Cifrador
+      </Text>
+      <PasswordInput
+        mt="md"
+        label="Llave"
+        placeholder="Ingrese llave"
+        error="Invalid name"
+        className="w-full"
+        {...form.getInputProps("llave")}
+      />
 
-        <Dropzone
-          onDrop={onDrop}
-          onReject={onReject}
-          accept={{
-            "text/plain": [".txt"],
-          }}
-          maxFiles={1}
-        >
-          <Group justify="center" gap="xl" style={{ pointerEvents: "none" }}>
-            <Dropzone.Accept>
-              <IconUpload
-                style={{
-                  width: rem(52),
-                  height: rem(52),
-                  color: "var(--mantine-color-blue-6)",
-                }}
-                stroke={1.5}
-              />
-            </Dropzone.Accept>
-            <Dropzone.Reject>
-              <IconX
-                style={{
-                  width: rem(52),
-                  height: rem(52),
-                  color: "var(--mantine-color-red-6)",
-                }}
-                stroke={1.5}
-              />
-            </Dropzone.Reject>
-            <Dropzone.Idle>
-              <IconPhoto
-                style={{
-                  width: rem(52),
-                  height: rem(52),
-                  color: "var(--mantine-color-dimmed)",
-                }}
-                stroke={1.5}
-              />
-            </Dropzone.Idle>
+      <Dropzone
+        onDrop={onDrop}
+        onReject={onReject}
+        accept={{
+          "text/plain": [".txt"],
+        }}
+        maxFiles={1}
+      >
+        <Group justify="center" gap="xl" style={{ pointerEvents: "none" }}>
+          <Dropzone.Accept>
+            <IconUpload
+              style={{
+                width: rem(52),
+                height: rem(52),
+                color: "var(--mantine-color-blue-6)",
+              }}
+              stroke={1.5}
+            />
+          </Dropzone.Accept>
+          <Dropzone.Reject>
+            <IconX
+              style={{
+                width: rem(52),
+                height: rem(52),
+                color: "var(--mantine-color-red-6)",
+              }}
+              stroke={1.5}
+            />
+          </Dropzone.Reject>
+          <Dropzone.Idle>
+            <IconPhoto
+              style={{
+                width: rem(52),
+                height: rem(52),
+                color: "var(--mantine-color-dimmed)",
+              }}
+              stroke={1.5}
+            />
+          </Dropzone.Idle>
 
-            <div>
-              <Text size="xl" inline>
-                Arrastra un archivo .txt cifrado
-              </Text>
-              <Text size="sm" c="dimmed" inline mt={7}>
-                Solo se aceptan archivos .txt
-              </Text>
-            </div>
-          </Group>
-        </Dropzone>
-        <Button type="submit" fullWidth>
-          Cifrar
-        </Button>
-      </form>
-    </div>
+          <div>
+            <Text size="xl" inline>
+              Arrastra un archivo .txt
+            </Text>
+            <Text size="sm" c="dimmed" inline mt={7}>
+              Solo se aceptan archivos .txt
+            </Text>
+          </div>
+        </Group>
+      </Dropzone>
+      <Button type="submit" fullWidth>
+        Cifrar
+      </Button>
+    </form>
   );
 };
