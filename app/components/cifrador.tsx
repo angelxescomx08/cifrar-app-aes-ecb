@@ -1,85 +1,126 @@
-import { Input } from "@/app/components/input";
-import React, { useState } from "react";
-import { Textarea } from "./textarea";
-import { Button } from "./button";
-import zod from "zod";
-import { FieldErrors, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Dialog } from "@mui/material";
 import CryptoJS from "crypto-js";
+import { Button, Group, PasswordInput, Text, rem } from "@mantine/core";
+import { Dropzone, FileRejection, FileWithPath } from "@mantine/dropzone";
+import { IconPhoto, IconUpload, IconX } from "@tabler/icons-react";
+import { useForm } from "@mantine/form";
+import { readFileContent } from "../utils/read-file";
+import { downloadFile } from "../utils/create-file";
 
-const schema = zod.object({
+/* const schema = zod.object({
   llave: zod.string().length(16),
   "plain-text": zod.string(),
 });
 
-type schemaType = zod.infer<typeof schema>;
+type schemaType = zod.infer<typeof schema>; */
 
 export const Cifrador = () => {
-  const [open, setOpen] = useState(false);
-  const [cipheredText, setCipheredText] = useState("");
-
-  const { register, handleSubmit } = useForm<schemaType>({
-    resolver: zodResolver(schema),
-    values: {
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
       llave: "",
-      "plain-text": "",
+      plainText: "",
+    },
+    validate: {
+      llave: (valor) =>
+        valor.length === 16
+          ? null
+          : "La llave debe tener una longitud de 16 dígitos",
     },
   });
 
-  const handleOpenDialog = () => {
-    setOpen(true);
+  const onDrop = async (files: FileWithPath[]) => {
+    const content = await readFileContent(files[0]);
+    form.setFieldValue("plainText", content);
   };
 
-  const handleCloseDialog = () => {
-    setOpen(false);
+  const onReject = (files: FileRejection[]) => {
+    console.log(files);
   };
 
-  const onValid = (data: schemaType) => {
-    const encrypted = CryptoJS.AES.encrypt(
-      data["plain-text"].trim(),
-      data.llave.trim()
-    ).toString();
-    setCipheredText(encrypted);
-    handleOpenDialog();
+  const onSubmit = ({
+    llave,
+    plainText,
+  }: {
+    llave: string;
+    plainText: string;
+  }) => {
+    console.log({
+      llave,
+      plainText,
+    });
+    const encrypted = CryptoJS.AES.encrypt(plainText, llave).toString();
+    downloadFile(encrypted, "encrypted.txt");
   };
-
-  const onInvalid = (data: FieldErrors<schemaType>) => {};
 
   return (
     <div>
       <form
-        onSubmit={handleSubmit(onValid, onInvalid)}
-        className="flex flex-col justify-center items-center w-full"
+        onSubmit={form.onSubmit(onSubmit)}
+        className="flex flex-col justify-center items-center w-full gap-4"
       >
-        <Input
-          type="password"
-          register={register}
+        <PasswordInput
+          mt="md"
           label="Llave"
-          name="llave"
-          placeholder="01234567891011"
+          placeholder="Ingrese llave"
+          error="Invalid name"
+          className="w-full"
+          {...form.getInputProps("llave")}
         />
-        <Textarea
-          register={register}
-          label="Texto plano"
-          name="plain-text"
-          placeholder="Mensaje a cifrar"
-        />
-        <Button type="submit">Cifrar</Button>
-      </form>
 
-      <Dialog open={open} onClose={handleCloseDialog}>
-        <div className="flex flex-col justify-center items-center w-[600px] h-[600px] max-w-full max-h-dvh">
-          <h1 className="font-bold mb-5 text-2xl">Texto cifrado</h1>
-          <textarea
-            className="w-2/3 h-[400px] border border-gray-300 p-5"
-            value={cipheredText}
-            onChange={(e) => {
-              setCipheredText(e.target.value);
-            }}
-          ></textarea>
-        </div>
-      </Dialog>
+        <Dropzone
+          onDrop={onDrop}
+          onReject={onReject}
+          accept={{
+            "text/plain": [".txt"],
+          }}
+          maxFiles={1}
+        >
+          <Group justify="center" gap="xl" style={{ pointerEvents: "none" }}>
+            <Dropzone.Accept>
+              <IconUpload
+                style={{
+                  width: rem(52),
+                  height: rem(52),
+                  color: "var(--mantine-color-blue-6)",
+                }}
+                stroke={1.5}
+              />
+            </Dropzone.Accept>
+            <Dropzone.Reject>
+              <IconX
+                style={{
+                  width: rem(52),
+                  height: rem(52),
+                  color: "var(--mantine-color-red-6)",
+                }}
+                stroke={1.5}
+              />
+            </Dropzone.Reject>
+            <Dropzone.Idle>
+              <IconPhoto
+                style={{
+                  width: rem(52),
+                  height: rem(52),
+                  color: "var(--mantine-color-dimmed)",
+                }}
+                stroke={1.5}
+              />
+            </Dropzone.Idle>
+
+            <div>
+              <Text size="xl" inline>
+                Arrastra un archivo .txt cifrado
+              </Text>
+              <Text size="sm" c="dimmed" inline mt={7}>
+                Solo se aceptan archivos .txt
+              </Text>
+            </div>
+          </Group>
+        </Dropzone>
+        <Button type="submit" fullWidth>
+          Cifrar
+        </Button>
+      </form>
     </div>
   );
 };
