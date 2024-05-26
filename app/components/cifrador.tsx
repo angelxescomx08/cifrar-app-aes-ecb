@@ -1,12 +1,14 @@
 import CryptoJS from "crypto-js";
 import { Button, Group, PasswordInput, Text, rem } from "@mantine/core";
 import { Dropzone, FileRejection, FileWithPath } from "@mantine/dropzone";
-import { IconPhoto, IconUpload, IconX } from "@tabler/icons-react";
+import { IconUpload, IconX, IconFile, IconThumbUp } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
 import { readFileContent } from "../utils/read-file";
 import { downloadFile } from "../utils/create-file";
+import { useState } from "react";
 
 export const Cifrador = () => {
+  const [file, setFile] = useState<FileWithPath | null>(null);
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -23,6 +25,7 @@ export const Cifrador = () => {
 
   const onDrop = async (files: FileWithPath[]) => {
     const content = await readFileContent(files[0]);
+    setFile(files[0]);
     form.setFieldValue("plainText", content);
   };
 
@@ -74,47 +77,92 @@ export const Cifrador = () => {
           "text/plain": [".txt"],
         }}
         maxFiles={1}
+        style={{
+          width: "100%",
+        }}
       >
         <Group justify="center" gap="xl" style={{ pointerEvents: "none" }}>
           <Dropzone.Accept>
-            <IconUpload
-              style={{
-                width: rem(52),
-                height: rem(52),
-                color: "var(--mantine-color-blue-6)",
-              }}
-              stroke={1.5}
-            />
+            <div className="flex justify-around items-center w-full">
+              <IconUpload
+                style={{
+                  width: rem(52),
+                  height: rem(52),
+                  color: "var(--mantine-color-blue-6)",
+                }}
+                stroke={1.5}
+              />
+              <div>
+                <Text size="xl" inline>
+                  Archivo válido
+                </Text>
+                <Text size="sm" c="dimmed" inline mt={7}>
+                  El archivo tiene un formato válido
+                </Text>
+              </div>
+            </div>
           </Dropzone.Accept>
           <Dropzone.Reject>
-            <IconX
-              style={{
-                width: rem(52),
-                height: rem(52),
-                color: "var(--mantine-color-red-6)",
-              }}
-              stroke={1.5}
-            />
+            <div className="flex justify-around items-center w-full">
+              <IconX
+                style={{
+                  width: rem(52),
+                  height: rem(52),
+                  color: "var(--mantine-color-red-6)",
+                }}
+                stroke={1.5}
+              />
+              <div>
+                <Text size="xl" inline>
+                  Archivo no válido
+                </Text>
+                <Text size="sm" c="dimmed" inline mt={7}>
+                  El archivo no tiene un formato válido
+                </Text>
+              </div>
+            </div>
           </Dropzone.Reject>
           <Dropzone.Idle>
-            <IconPhoto
-              style={{
-                width: rem(52),
-                height: rem(52),
-                color: "var(--mantine-color-dimmed)",
-              }}
-              stroke={1.5}
-            />
+            {file ? (
+              <div className="flex justify-around items-center w-full">
+                <IconThumbUp
+                  style={{
+                    width: rem(52),
+                    height: rem(52),
+                    color: "var(--mantine-color-dimmed)",
+                  }}
+                  stroke={1.5}
+                />
+                <div>
+                  <Text size="xl" inline>
+                    {file.name}
+                  </Text>
+                  <Text size="sm" c="dimmed" inline mt={7}>
+                    Archivo aceptado
+                  </Text>
+                </div>
+              </div>
+            ) : (
+              <div className="flex justify-around items-center w-full">
+                <IconFile
+                  style={{
+                    width: rem(52),
+                    height: rem(52),
+                    color: "var(--mantine-color-dimmed)",
+                  }}
+                  stroke={1.5}
+                />
+                <div>
+                  <Text size="xl" inline>
+                    Arrastra un archivo .txt
+                  </Text>
+                  <Text size="sm" c="dimmed" inline mt={7}>
+                    Solo se aceptan archivos .txt
+                  </Text>
+                </div>
+              </div>
+            )}
           </Dropzone.Idle>
-
-          <div>
-            <Text size="xl" inline>
-              Arrastra un archivo .txt
-            </Text>
-            <Text size="sm" c="dimmed" inline mt={7}>
-              Solo se aceptan archivos .txt
-            </Text>
-          </div>
         </Group>
       </Dropzone>
       <Button type="submit" fullWidth>
