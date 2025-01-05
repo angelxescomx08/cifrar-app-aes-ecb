@@ -1,3 +1,7 @@
 {
-  "cSpell.words": ["Cifrador", "Descrifrador"]
+  "cSpell.words": [
+    "Cifrador",
+    "Descrifrador"
+  ],
+  "editor.defaultFormatter": "biomejs.biome"
 }
