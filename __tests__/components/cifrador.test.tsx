@@ -11,7 +11,8 @@ function Wrapper() {
 }
 
 describe("Cifrador", () => {
-	it("Shoud render", () => {
+	it("Should render", () => {
 		render(<Wrapper />);
 	});
+	it("");
 });

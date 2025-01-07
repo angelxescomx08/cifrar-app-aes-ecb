@@ -40,10 +40,6 @@ export const Cifrador = () => {
 		llave: string;
 		plainText: string;
 	}) => {
-		console.log({
-			llave,
-			plainText,
-		});
 		const encrypted = CryptoJS.AES.encrypt(plainText, llave).toString();
 		downloadFile(encrypted, "encrypted.txt");
 	};
