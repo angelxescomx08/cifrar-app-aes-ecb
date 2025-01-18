@@ -7,7 +7,7 @@ import { useState } from "react";
 import { downloadFile } from "../utils/create-file";
 import { readFileContent } from "../utils/read-file";
 
-export const Cifrador = () => {
+export function Cifrador() {
 	const [file, setFile] = useState<FileWithPath | null>(null);
 	const form = useForm({
 		mode: "uncontrolled",
@@ -76,6 +76,7 @@ export const Cifrador = () => {
 				style={{
 					width: "100%",
 				}}
+				data-testid="dropzone"
 			>
 				<Group justify="center" gap="xl" style={{ pointerEvents: "none" }}>
 					<Dropzone.Accept>
@@ -166,4 +167,4 @@ export const Cifrador = () => {
 			</Button>
 		</form>
 	);
-};
+}
