@@ -1,13 +1,13 @@
-"use client";
-
-import { Cifrador } from "./components/cifrador";
-import { Descifrador } from "./components/descifrador";
+import { Toaster } from "react-hot-toast";
+import { Encrypter } from "./components/encrypter";
+import { Decrypter } from "./components/decrypter";
 
 export default function Home() {
 	return (
-		<main className="flex justify-center items-center h-dvh flex-col gap-4 p-5 bg-slate-50">
-			<Cifrador />
-			<Descifrador />
+		<main className="flex justify-center items-center h-dvh gap-4 p-5 bg-slate-50">
+			<Encrypter />
+			<Decrypter />
+			<Toaster />
 		</main>
 	);
 }
