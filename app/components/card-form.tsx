@@ -31,6 +31,7 @@ export const CardForm = ({
 				fw={900}
 				variant="gradient"
 				gradient={{ from: "blue", to: "cyan", deg: 90 }}
+				data-testid="title"
 			>
 				{title}
 			</Text>
@@ -55,7 +56,7 @@ export const CardForm = ({
 				}}
 				data-testid="dropzone"
 			>
-				<Group justify="center" gap="xl" style={{ pointerEvents: "none" }}>
+				<Group justify="center" gap="xl">
 					<Dropzone.Accept>
 						<div className="flex justify-around items-center w-full">
 							<IconUpload
@@ -139,7 +140,7 @@ export const CardForm = ({
 					</Dropzone.Idle>
 				</Group>
 			</Dropzone>
-			<Button type="submit" fullWidth>
+			<Button type="submit" fullWidth data-testid="button">
 				{buttonText}
 			</Button>
 		</form>
