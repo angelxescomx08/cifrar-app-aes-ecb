@@ -1,11 +1,27 @@
 import { CardForm } from "@/app/components/card-form";
 import { MantineProvider } from "@mantine/core";
-import { fireEvent, render, waitFor } from "@testing-library/react";
-import user from "@testing-library/user-event";
+import { fireEvent, render, act } from "@testing-library/react";
 import { ComponentProps } from "react";
-import { Simulate } from "react-dom/test-utils";
 
 type Props = ComponentProps<typeof CardForm>;
+
+const file = new File(["Contenido del archivo"], "archivo.txt", {
+	type: "text/plain",
+});
+
+const dataTransfer = {
+	dataTransfer: {
+		files: [file],
+		items: [
+			{
+				kind: "file",
+				type: file.type,
+				getAsFile: () => file,
+			},
+		],
+		types: ["Files"],
+	},
+};
 
 jest.mock("@mantine/form", () => ({
 	...jest.requireActual("@mantine/form"),
@@ -66,5 +82,26 @@ describe("CardForm", () => {
 
 		expect(titleElement).toHaveTextContent(title);
 		expect(buttonElement).toHaveTextContent(buttonText);
+	});
+
+	it("Should call onDrop when drop event is triggered", async () => {
+		const { getByTestId } = render(
+			<Wrapper
+				form={formMock}
+				title={title}
+				buttonText={buttonText}
+				onDrop={onDropMock}
+				onReject={onRejectMock}
+				onSubmit={onSubmitMock}
+			/>,
+		);
+
+		const dropzoneElement = getByTestId("dropzone");
+
+		await act(async () => {
+			fireEvent.drop(dropzoneElement, dataTransfer);
+		});
+
+		expect(onDropMock).toHaveBeenCalledTimes(1);
 	});
 });
