@@ -5,22 +5,28 @@ import { ComponentProps } from "react";
 
 type Props = ComponentProps<typeof CardForm>;
 
-const file = new File(["Contenido del archivo"], "archivo.txt", {
+const fileText = new File(["Contenido del archivo"], "archivo.txt", {
 	type: "text/plain",
 });
 
-const dataTransfer = {
-	dataTransfer: {
-		files: [file],
-		items: [
-			{
-				kind: "file",
-				type: file.type,
-				getAsFile: () => file,
-			},
-		],
-		types: ["Files"],
-	},
+const fileImage = new File(["Contenido del archivo"], "archivo.png", {
+	type: "image/png",
+});
+
+const getDataTransfer = (file: File) => {
+	return {
+		dataTransfer: {
+			files: [file],
+			items: [
+				{
+					kind: "file",
+					type: file.type,
+					getAsFile: () => file,
+				},
+			],
+			types: ["Files"],
+		},
+	};
 };
 
 jest.mock("@mantine/form", () => ({
@@ -84,24 +90,64 @@ describe("CardForm", () => {
 		expect(buttonElement).toHaveTextContent(buttonText);
 	});
 
-	it("Should call onDrop when drop event is triggered", async () => {
-		const { getByTestId } = render(
-			<Wrapper
-				form={formMock}
-				title={title}
-				buttonText={buttonText}
-				onDrop={onDropMock}
-				onReject={onRejectMock}
-				onSubmit={onSubmitMock}
-			/>,
-		);
+	describe("Dropzone", () => {
+		it("Should call onDrop when drop event is triggered", async () => {
+			const { getByTestId } = render(
+				<Wrapper
+					form={formMock}
+					title={title}
+					buttonText={buttonText}
+					onDrop={onDropMock}
+					onReject={onRejectMock}
+					onSubmit={onSubmitMock}
+				/>,
+			);
 
-		const dropzoneElement = getByTestId("dropzone");
+			const dropzoneElement = getByTestId("dropzone");
 
-		await act(async () => {
-			fireEvent.drop(dropzoneElement, dataTransfer);
+			await act(async () => {
+				fireEvent.drop(dropzoneElement, getDataTransfer(fileText));
+			});
+
+			expect(onDropMock).toHaveBeenCalledTimes(1);
 		});
 
-		expect(onDropMock).toHaveBeenCalledTimes(1);
+		it("Should not call onDrop if file is not a text file", async () => {
+			const { getByTestId } = render(
+				<Wrapper
+					form={formMock}
+					title={title}
+					buttonText={buttonText}
+					onDrop={onDropMock}
+					onReject={onRejectMock}
+					onSubmit={onSubmitMock}
+				/>,
+			);
+
+			const dropzoneElement = getByTestId("dropzone");
+
+			await act(async () => {
+				fireEvent.drop(dropzoneElement, getDataTransfer(fileImage));
+			});
+
+			expect(onDropMock).toHaveBeenCalledTimes(0);
+		});
+
+		it("Should render right text if not file", async () => {
+			const { getByText } = render(
+				<Wrapper
+					form={formMock}
+					title={title}
+					buttonText={buttonText}
+					onDrop={onDropMock}
+					onReject={onRejectMock}
+					onSubmit={onSubmitMock}
+				/>,
+			);
+
+			const textElement = getByText(/Arrastra un archivo .txt/i);
+
+			expect(textElement).toBeInTheDocument();
+		});
 	});
 });
